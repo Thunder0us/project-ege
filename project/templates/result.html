@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Результаты: {{ subject.name }}</h2>
+    <h3 class="mb-4">Правильно: {{ score }} из {{ total }}</h3>
+    
+    {% for res in results %}
+    <div class="card mb-3 {{ 'border-success' if res.is_correct else 'border-danger' }}">
+        <div class="card-body">
+            <p><strong>Задание:</strong> {{ res.task.text }}</p>
+            <p><strong>Ваш ответ:</strong> <span class="{{ 'text-success' if res.is_correct else 'text-danger' }}">{{ res.user_answer }}</span></p>
+            <p><strong>Правильный ответ:</strong> {{ res.correct_answer }}</p>
+            
+            {% if res.task.explanation %}
+            <details>
+                <summary>Показать объяснение</summary>
+                <p class="mt-2">{{ res.task.explanation }}</p>
+            </details>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    
+    <a href="/dashboard" class="btn btn-primary">Вернуться к предметам</a>
+    <a href="/subject/{{ subject.id }}" class="btn btn-outline-primary">Решить ещё раз</a>
+</div>
+{% endblock %}

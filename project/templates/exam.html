@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Тренировка: {{ subject.name }}</h2>
+    <p class="text-muted">Решите задания и нажмите "Проверить"</p>
+    
+    <form method="POST" action="{{ url_for('main.check_exam', subject_id=subject.id) }}">
+        {% for task in tasks %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-light">
+                <strong>Задание {{ loop.index }}</strong>
+            </div>
+            <div class="card-body">
+                <p class="fs-5">{{ task.text | safe }}</p>
+                
+                <input type="hidden" name="task_id_{{ task.id }}" value="{{ task.id }}">
+                <input type="text" 
+                       name="answer_{{ task.id }}" 
+                       class="form-control form-control-lg"
+                       placeholder="Введите ответ"
+                       autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       spellcheck="false"
+                       required>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success btn-lg px-5">Проверить ответы</button>
+            <a href="/dashboard" class="btn btn-secondary btn-lg px-5 ms-3">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

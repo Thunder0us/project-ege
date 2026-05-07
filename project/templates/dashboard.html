@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-primary">Выберите предмет</h1>
+    <p class="lead text-muted">Начните тренировку и отслеживайте прогресс</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for subject in subjects %}
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body py-5">
+                <h3 class="card-title mb-3">{{ subject.name }}</h3>
+                <a href="/subject/{{ subject.id }}" class="btn btn-primary btn-lg px-5">
+                    Начать тренировку
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="mt-5 text-center">
+    <a href="/admin/add_task" class="btn btn-outline-primary">
+        ➕ Добавить новое задание (админ)
+    </a>
+</div>
+{% endblock %}
