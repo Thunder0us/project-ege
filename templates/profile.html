@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>📊 Моя статистика</h1>
+        <button onclick="generateTasks()" class="btn btn-success btn-lg shadow">
+            ✨ Сгенерировать новые задания (Ollama)
+        </button>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow">
+                <div class="card-body">
+                    <h2 class="text-primary fw-bold">{{ total_answers or 0 }}</h2>
+                    <p class="text-muted">Заданий решено</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow">
+                <div class="card-body">
+                    <h2 class="text-success fw-bold">{{ accuracy or 0 }}%</h2>
+                    <p class="text-muted">Общая точность</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Прогресс по предметам -->
+    <h4 class="mb-3">Прогресс по предметам</h4>
+    <div class="row g-4 mb-5">
+        {% for stat in subjects_stats %}
+        <div class="col-lg-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>{{ stat.subject.name }}</h5>
+                    <div class="progress mb-2" style="height: 24px;">
+                        <div class="progress-bar bg-primary fw-bold" style="width: {{ stat.percent }}%;">
+                            {{ stat.percent }}%
+                        </div>
+                    </div>
+                    <small class="text-muted">{{ stat.correct }} / {{ stat.total }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- График -->
+    <h4 class="mb-3">Прогресс за последние 30 дней</h4>
+    <div class="card shadow mb-5">
+        <div class="card-body">
+            <canvas id="progressChart" height="130"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function generateTasks() {
+    if (!confirm("Запустить генерацию новых заданий через Ollama?")) return;
+    
+    fetch('/ai/generate', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            alert(data.message || "Готово!");
+            location.reload();
+        })
+        .catch(err => alert("Ollama не запущен или ошибка."));
+}
+
+// График
+new Chart(document.getElementById('progressChart'), {
+    type: 'line',
+    data: {
+        labels: [{% for p in progress_data %}'{{ p.date }}',{% endfor %}],
+        datasets: [{
+            label: 'Точность %',
+            data: [{% for p in progress_data %}{{ p.accuracy }},{% endfor %}],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { min: 0, max: 100 }}
+    }
+});
+</script>
+{% endblock %}

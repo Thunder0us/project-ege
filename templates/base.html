@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЕГЭ Подготовка</title>
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/app.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Компактная навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top py-2">
+        <div class="container">
+            <div class="d-flex align-items-center gap-4 w-100">
+                <!-- Кнопка Предметы -->
+                <a href="/dashboard" class="btn btn-light fw-medium px-4 py-2">
+                    🏠 Предметы
+                </a>
+                
+                <!-- Кнопка Добавить задание -->
+                <a href="/admin/add_task" class="btn btn-outline-light fw-medium px-4 py-2">
+                    ➕ Добавить задание
+                </a>
+
+                <a href="/stats/profile" class="btn btn-outline-light fw-medium px-4 py-2">
+                    📊 Статистика
+                </a>
+
+                <!-- Переключатель темы (крайний правый угол) -->
+                <button id="theme-toggle" class="btn btn-outline-light px-3 py-2 ms-auto">
+                    🌙
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="/static/bootstrap.bundle.min.js"></script>
+    <script src="/static/theme.js"></script>
+</body>
+</html>
